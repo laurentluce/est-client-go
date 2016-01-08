@@ -10,12 +10,18 @@ import (
 	"net/http"
 )
 
+// Get issues an HTTP GET request.
+// Returns the response body.
 func Get(url string, headers map[string]string,
          serverCert []byte) ([]byte, error) {
 
 	return Send("GET", url, nil, headers, "", "", nil, nil, serverCert)
 }
 
+// Post issues an HTTP POST request.
+// username and password are used for basic auth.
+// clientKey and clientCert are used for TLS auth.
+// Returns the response body.
 func Post(url string, data []byte, headers map[string]string,
           username string, password string, clientCert []byte,
           clientKey []byte, serverCert []byte) ([]byte, error) {
@@ -24,7 +30,7 @@ func Post(url string, data []byte, headers map[string]string,
                 clientCert, clientKey, serverCert)
 }
 
-
+// Send issues an HTTP request.  Returns the body.
 func Send(method string, url string, data []byte, headers map[string]string,
 		  username string, password string,
 		  clientCert []byte,
@@ -86,13 +92,13 @@ func Send(method string, url string, data []byte, headers map[string]string,
     encoding := resp.Header.Get("Content-Transfer-Encoding")
     prefix := []byte{'-', '-', '-', '-', '-', 'B', 'E', 'G', 'I', 'N'}
     if encoding == "base64" && !bytes.HasPrefix(body, prefix) {
-        body_dec := make([]byte, base64.StdEncoding.DecodedLen(len(body)))
-        l, err := base64.StdEncoding.Decode(body_dec, body)
+        bodyDec := make([]byte, base64.StdEncoding.DecodedLen(len(body)))
+        l, err := base64.StdEncoding.Decode(bodyDec, body)
         if err != nil {
             return nil, err
         }
 
-        return body_dec[:l], nil
+        return bodyDec[:l], nil
 
     }
 

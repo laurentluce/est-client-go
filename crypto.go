@@ -11,7 +11,7 @@ import (
     "os/exec"
 )
 
-// Convert PKCS#7 cert to PEM format using openssl.
+// PKCS7ToPEMOpenSSL converts PKCS#7 cert to PEM format using openssl.
 func PKCS7ToPEMOpenSSL(data []byte) ([]byte, error) {
 
     informs := []string{"PEM", "DER"}
@@ -33,11 +33,12 @@ func PKCS7ToPEMOpenSSL(data []byte) ([]byte, error) {
         cmd.Wait()
     }
 
-    err := errors.New("PKCS7 type not supported.")
+    err := errors.New("PKCS7 type not supported")
     return nil, err
 }
 
-// Create CSR, return private key and CSR in PEM format.
+// CreateCsr generates a key pair, creates a CSR and returns the private key
+// and CSR in PEM format.
 func CreateCsr(commonName string, country string, state string, city string,
                organization string, organizationalUnit string,
                emailAddress string) ([]byte, []byte, error) {
@@ -80,4 +81,3 @@ func CreateCsr(commonName string, country string, state string, city string,
 
     return privPem, certPem, nil
 }
-

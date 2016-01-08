@@ -3,17 +3,18 @@ package est
 import (
 )
 
+// Client represents and EST client.
 type Client struct {
-    UrlPrefix string
+    URLPrefix string
     Username string
     Password string
     ServerCert []byte
 }
 
-// EST GET /cacerts request.
+// CaCerts issues an EST GET /cacerts request.
 // Return CA certs in PEM format.
 func (c *Client) CaCerts() ([]byte, error) {
-	url := c.UrlPrefix + "/.well-known/est/cacerts"
+	url := c.URLPrefix + "/.well-known/est/cacerts"
 	content, err := Get(url, nil, c.ServerCert)
     if err != nil {
 		return nil, err
@@ -27,10 +28,10 @@ func (c *Client) CaCerts() ([]byte, error) {
     return p, err
 }
 
-// EST POST /simpleenroll request.
+// SimpleEnroll issues an EST POST /simpleenroll request.
 // Takes a CSR in PEM format and returns the signed cert in PEM format.
 func (c *Client) SimpleEnroll(csr []byte) ([]byte, error) {
-	url := c.UrlPrefix + "/.well-known/est/simpleenroll"
+	url := c.URLPrefix + "/.well-known/est/simpleenroll"
     headers := map[string]string{
         "Content-Type": "application/pkcs10",
     }
@@ -49,12 +50,12 @@ func (c *Client) SimpleEnroll(csr []byte) ([]byte, error) {
     return p, err
 }
 
-// EST POST /simplereenroll request.
+// SimpleReenroll issues an EST POST /simplereenroll request.
 // Takes a CSR in PEM format and returns the signed cert in PEM format.
 // You can also pass a client cert/key for authentication.
 func (c *Client) SimpleReenroll(csr []byte, clientCert []byte,
                                 clientKey []byte) ([]byte, error) {
-	url := c.UrlPrefix + "/.well-known/est/simplereenroll"
+	url := c.URLPrefix + "/.well-known/est/simplereenroll"
     headers := map[string]string{
         "Content-Type": "application/pkcs10",
     }
