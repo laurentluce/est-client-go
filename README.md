@@ -3,7 +3,7 @@ est-client-go
 
 EST client - RFC 7030
 
-```golang
+```go
 package main
 
 import (
