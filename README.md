@@ -1,7 +1,7 @@
 est-client-go
 =================
 
-EST client - RFC 7030
+EST client - RFC 7030 - Enrollment over Secure Transport
 
 ```go
 // EST client.  Username and password will be used for basic auth.
@@ -37,3 +37,8 @@ cert, err = client.SimpleReenroll(csr, nil, nil)
 // Reenroll using the CSR and the client cert/key for authentication.
 cert, err = client.SimpleReenroll(csr, cert, priv)
 ```
+
+Out of Scope:
+
+  - §3.3.3 - Certificate-less TLS Mutual Authentication.
+  - §3.5 - Linking Identity and PoP information.
