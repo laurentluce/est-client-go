@@ -42,3 +42,6 @@ Out of Scope:
 
   - §3.3.3 - Certificate-less TLS Mutual Authentication.
   - §3.5 - Linking Identity and PoP information.
+  - $4.3 - CMC
+  - $4.4 - Server-side key generation.
+  - $4.5 - CSR attributes.
