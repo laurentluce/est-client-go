@@ -20,7 +20,7 @@ func (c *Client) CaCerts() ([]byte, error) {
 		return nil, err
 	}
 
-    p, err := PKCS7ToPEMOpenSSL(content)
+    p, err := PKCS7ToPEM(content)
     if err != nil {
 		return nil, err
 	}
@@ -42,7 +42,7 @@ func (c *Client) SimpleEnroll(csr []byte) ([]byte, error) {
 		return nil, err
 	}
 
-    p, err := PKCS7ToPEMOpenSSL(content)
+    p, err := PKCS7ToPEM(content)
     if err != nil {
 		return nil, err
 	}
@@ -66,7 +66,7 @@ func (c *Client) SimpleReenroll(csr []byte, clientCert []byte,
 		return nil, err
 	}
 
-    p, err := PKCS7ToPEMOpenSSL(content)
+    p, err := PKCS7ToPEM(content)
     if err != nil {
 		return nil, err
 	}

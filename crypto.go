@@ -1,40 +1,44 @@
 package est
 
 import (
+    "bytes"
     "crypto/rand"
     "crypto/rsa"
     "crypto/x509"
     "crypto/x509/pkix"
     "encoding/pem"
-    "errors"
-    "io/ioutil"
-    "os/exec"
+
+    "github.com/fullsailor/pkcs7"
 )
 
-// PKCS7ToPEMOpenSSL converts PKCS#7 cert to PEM format using openssl.
-func PKCS7ToPEMOpenSSL(data []byte) ([]byte, error) {
+// PKCS7ToPEM converts PKCS7 formatted data to PEM formatted data.
+func PKCS7ToPEM(data []byte) ([]byte, error) {
 
-    informs := []string{"PEM", "DER"}
-    for _, inform := range informs {
-        cmd := exec.Command("openssl", "pkcs7", "-inform", inform, "-outform",
-                            "PEM", "-print_certs")
-
-        in, _ := cmd.StdinPipe()
-        out, _ := cmd.StdoutPipe()
-        err, _ := cmd.StderrPipe()
-        cmd.Start()
-        in.Write(data)
-        in.Close()
-        cmdOut, _ := ioutil.ReadAll(out)
-        cmdErr, _ := ioutil.ReadAll(err)
-        if len(cmdErr) == 0 {
-            return cmdOut, nil
-        }
-        cmd.Wait()
+    var d []byte
+    prefix := []byte{'-', '-', '-', '-', '-', 'B', 'E', 'G', 'I', 'N'}
+    if bytes.HasPrefix(data, prefix) {
+        result, _ := pem.Decode([]byte(data))
+        d = result.Bytes
+    } else {
+        d = data
     }
 
-    err := errors.New("PKCS7 type not supported")
-    return nil, err
+    p7, err := pkcs7.Parse(d)
+
+    if err != nil {
+        return nil, err
+    }
+
+    var certsPem []byte
+    for _, cert := range p7.Certificates {
+        block := pem.Block{
+            Type: "CERTIFICATE",
+            Bytes: cert.Raw,
+        }
+        certsPem = append(certsPem, pem.EncodeToMemory(&block)...)
+    }
+
+    return certsPem, err
 }
 
 // CreateCsr generates a key pair, creates a CSR and returns the private key
