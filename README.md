@@ -7,7 +7,7 @@ EST client - RFC 7030
 // EST client.  Username and password will be used for basic auth.
 // serverCert contains the EST server certificate in PEM format.
 client := est.Client{
-            UrlPrefix: "https://testrfc7030.cisco.com:8443",
+            URLPrefix: "https://testrfc7030.cisco.com:8443",
             Username: "estuser",
             Password: "estpwd",
             ServerCert: serverCert}
