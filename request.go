@@ -6,8 +6,8 @@ import (
     "crypto/x509"
     "encoding/base64"
     "errors"
-	"io/ioutil"
-	"net/http"
+    "io/ioutil"
+    "net/http"
 )
 
 // Get issues an HTTP GET request.
@@ -15,7 +15,7 @@ import (
 func Get(url string, headers map[string]string,
          serverCert []byte) ([]byte, error) {
 
-	return Send("GET", url, nil, headers, "", "", nil, nil, serverCert)
+    return Send("GET", url, nil, headers, "", "", nil, nil, serverCert)
 }
 
 // Post issues an HTTP POST request.
@@ -26,14 +26,14 @@ func Post(url string, data []byte, headers map[string]string,
           username string, password string, clientCert []byte,
           clientKey []byte, serverCert []byte) ([]byte, error) {
 
-	return Send("POST", url, data, headers, username, password,
+    return Send("POST", url, data, headers, username, password,
                 clientCert, clientKey, serverCert)
 }
 
 // Send issues an HTTP request.  Returns the body.
 func Send(method string, url string, data []byte, headers map[string]string,
-		  username string, password string,
-		  clientCert []byte,
+          username string, password string,
+          clientCert []byte,
           clientKey []byte, serverCert []byte) ([]byte, error) {
 
     caCertPool := x509.NewCertPool()
@@ -57,12 +57,12 @@ func Send(method string, url string, data []byte, headers map[string]string,
         TLSClientConfig:    &tlsConfig,
     }
 
-	client := &http.Client{Transport: tr}
+    client := &http.Client{Transport: tr}
 
-	req, err := http.NewRequest(method, url, bytes.NewReader(data))
+    req, err := http.NewRequest(method, url, bytes.NewReader(data))
     if err != nil {
-		return nil, err
-	}
+        return nil, err
+    }
 
     if username != "" && password != "" {
         req.SetBasicAuth(username, password)
@@ -74,13 +74,13 @@ func Send(method string, url string, data []byte, headers map[string]string,
 
     resp, err := client.Do(req)
     if err != nil {
-		return nil, err
-	}
+        return nil, err
+    }
 
     defer resp.Body.Close()
     body, err := ioutil.ReadAll(resp.Body)
     if err != nil {
-		return nil, err
+        return nil, err
     }
 
     if resp.StatusCode != 200 {
@@ -102,5 +102,5 @@ func Send(method string, url string, data []byte, headers map[string]string,
 
     }
 
-	return body, nil
+    return body, nil
 }
